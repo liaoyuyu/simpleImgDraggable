@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='viewport'
+        content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+    <title>简单图片拖拽</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        img {
+            width: 50px;
+        }
+
+        ul {
+            width: 100%;
+            display: flex;
+        }
+
+        .box {
+            margin-top: 100px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .box div {
+            width: 30%;
+            height: 200px;
+            background-color: #eee;
+            border: 1px solid #000;
+        }
+
+        .box.prepare div {
+            border-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="img_list">
+        <li><img src="./img/icon01.png" alt=""></li>
+        <li><img src="./img/icon02.png" alt=""></li>
+        <li><img src="./img/icon03.png" alt=""></li>
+        <li><img src="./img/icon04.png" alt=""></li>
+        <li><img src="./img/icon05.png" alt=""></li>
+    </ul>
+
+    <div class="box">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+</body>
+
+</html>
+
+<script src="./simpleImgDraggable.js"></script>
+
+
+<script>
+    new simpleImgDraggable('.img_list img', {
+        copyOverhead: {
+            isCopy: true,//是否复制
+            copyCalss: '',//复制一份的 类名，用于有些需要修改样式
+            overheadPost: 'body',//定位在那个位置，类名
+        },
+        canDragInCon: ['.box1', '.box2', '.box3'],
+        //开始拖动事件，对应触摸拖拽中的 touchstart
+        ondragstart: (index, e) => {
+            document.querySelector(".box").classList.add("prepare")
+        },
+        //拖拽中，对应触摸拖拽中的 touchmove
+        ondrag: (index, e) => { },
+        //拖动结束事件，对应触摸拖拽中的 touchend
+        ondragend: (index, e, dargInBoxIndex, dargInBox) => {
+            dargInBox.style.borderColor = '';
+            document.querySelector(".box").classList.remove("prepare");
+        },
+        //拖入容器触发一次事件
+        ondragenter: (dargInBoxIndex, dargInBox) => {
+            dargInBox.style.borderColor = 'red';
+        },
+        //拖离容器触发一次事件
+        ondragleave: (dargInBoxIndex, dargInBox) => {
+            dargInBox.style.borderColor = '';
+        },
+        //在容器中拖动触发事件
+        ondragover: (dargInBoxIndex, dargInBox) => { },
+        success: (index, e, dargInBoxIndex, dargInBox) => {
+            // 复制塞入
+            let a = e.cloneNode(true);
+            dargInBox.appendChild(a);
+        }
+    });
+</script>
